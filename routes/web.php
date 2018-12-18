@@ -22,3 +22,5 @@ Route::post('login', 'SessionsController@store')->name('login');        // 存�
 // 用form表单不支持delete请求，硬要提交delete请求，则需加一个隐藏域：<input type="hidden" name="_method" value="DELETE"> 
 // 可由 {{ method_field('DELETE') }} 来生成上一行的表单域
 Route::delete('logout', 'SessionsController@destroy')->name('logout');  // 删除登录会话
+
+Route::get('signup/confirm/{token}', 'UsersController@confirmEmail')->name('confirm_email'); // 用户激活路由
