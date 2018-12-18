@@ -105,13 +105,17 @@ class UsersController extends Controller
   {
     $view = 'emails.confirm';
     $data = compact('user');
-    $from = 'aufree@yousails.com';
+    // $from = 'aufree@yousails.com'; // 邮件驱动为log时，需要from；邮件驱动为生产环境是，不需要form了
     $name = 'Aufree';
     $to = $user->email;
     $subject = "感谢注册 Sample 应用！请确认你的邮箱。";
 
-    Mail::send($view, $data, function ($message) use ($from, $name, $to, $subject) {
-        $message->from($from, $name)->to($to)->subject($subject);
+    // 邮件驱动为log时，需要from；邮件驱动为生产环境是，不需要form了
+    // Mail::send($view, $data, function ($message) use ($from, $name, $to, $subject) {
+    //     $message->from($from, $name)->to($to)->subject($subject);
+    // });
+    Mail::send($view, $data, function ($message) use ($to, $subject) {
+        $message->to($to)->subject($subject);
     });
   }
 

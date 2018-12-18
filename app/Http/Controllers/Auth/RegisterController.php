@@ -36,7 +36,7 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
+        $this->middleware('guest');  // 此控制器的方法，只能未登录才能访问
     }
 
     /**

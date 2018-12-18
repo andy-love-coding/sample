@@ -22,5 +22,13 @@ Route::post('login', 'SessionsController@store')->name('login');        // 存�
 // 用form表单不支持delete请求，硬要提交delete请求，则需加一个隐藏域：<input type="hidden" name="_method" value="DELETE"> 
 // 可由 {{ method_field('DELETE') }} 来生成上一行的表单域
 Route::delete('logout', 'SessionsController@destroy')->name('logout');  // 删除登录会话
-
 Route::get('signup/confirm/{token}', 'UsersController@confirmEmail')->name('confirm_email'); // 用户激活路由
+
+// 显示重置密码的邮箱发送页面
+Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
+// 邮箱发送重设链接
+Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+// 密码更新页面
+Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
+// 执行密码更新操作
+Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.update');
