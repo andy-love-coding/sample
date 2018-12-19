@@ -34,7 +34,10 @@ class UsersController extends Controller
 
   // 显示用户信息
   public function show(User $user) {  // $user 参数是自动解析路由中的用户 id 对应的用户实例对象
-    return view('users.show', compact('user'));
+    $statuses = $user->statuses()
+                      ->orderBy('created_at', 'desc')
+                      ->paginate(30);
+    return view('users.show', compact('user', 'statuses'));
   }
 
   // 创建用户，保存用户信息到数据库

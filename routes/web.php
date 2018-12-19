@@ -15,7 +15,7 @@ Route::get('/help','StaticPagesController@help') -> name('help');
 Route::get('/about','StaticPagesController@about') -> name('about');
 
 Route::get('signup','UsersController@create') -> name('signup');
-Route::resource('users','UsersController');
+Route::resource('users','UsersController'); // 会生成7个路由
 
 Route::get('login', 'SessionsController@create')->name('login');        // 显示登录页面
 Route::post('login', 'SessionsController@store')->name('login');        // 存储登录会话
@@ -32,3 +32,6 @@ Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail'
 Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
 // 执行密码更新操作
 Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.update');
+
+// 只生成 post:stroe 和 delete:destroy 2个路由
+Route::resource('statuses', 'StatusesController', ['only' => ['store', 'destroy']]);

@@ -40,6 +40,7 @@ class User extends Authenticatable
         });
     }
 
+    // 根据用户邮箱，生产头像地址
     public function gravatar($size = '100')
     {
         $hash = md5(strtolower(trim($this->attributes['email'])));
@@ -50,5 +51,18 @@ class User extends Authenticatable
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new ResetPassword($token));
+    }
+
+    // 用户关联微博，一个用户拥有多条微博：通过用户查找其发布的微博
+    public function statuses()
+    {
+        return $this->hasMany(Status::class);
+    }
+    
+    // 定义模型方法 feed 实现：获取用户的微博，按创建时间倒序排列
+    public function feed()
+    {
+        return $this->statuses()
+                    ->orderBy('created_at', 'desc');
     }
 }
