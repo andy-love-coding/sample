@@ -6,6 +6,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 // 引入消息通知类：ResetPassword
 use App\Notifications\ResetPassword;
+use Auth;
 
 class User extends Authenticatable
 {
@@ -62,7 +63,46 @@ class User extends Authenticatable
     // 定义模型方法 feed 实现：获取用户的微博，按创建时间倒序排列
     public function feed()
     {
-        return $this->statuses()
-                    ->orderBy('created_at', 'desc');
+        $user_ids = Auth::user()->followings->pluck('id')->toArray();
+        array_push($user_ids,Auth::user()->id);
+        return Status::whereIn('user_id', $user_ids) // 查询指定 user_id 的微博
+                    ->with('user') // 用 with 预加载微博关联的用户数据 (就是在查询微博的同时，一次性把微博的作者一起查询出来)
+                    ->orderBy('created_at','desc');
+    }
+
+    // 粉丝列表：通过 某博主(关注人) 来获取他的粉丝列表
+    public function followers()
+    {
+        return $this->belongsToMany(User::Class, 'followers', 'user_id', 'follower_id');
+    }
+
+    // 博主列表：通过 某粉丝 来获取他关注的博主(关注人)列表
+    public function followings()
+    {
+        return $this->belongsToMany(User::Class, 'followers', 'follower_id', 'user_id');
+    }
+
+    // 关注：粉丝 关注 博主
+    public function follow($user_ids)
+    {
+        if (!is_array($user_ids)) {            // 如果不是数组
+            $user_ids = compact('user_ids');   // 则变成关联数组
+        }
+        $this->followings()->sync($user_ids, false); // 为这个粉丝，添加 博主(关注人) 数组
+    }
+
+    // 取消关注：粉丝 取消关注 博主
+    public function unfollow($user_ids)
+    {
+        if (!is_array($user_ids)) {
+            $user_ids = compact('user_ids');
+        }
+        $this->followings()->detach($user_ids); // 为这个粉丝，删除 博主(关注人) 数组
+    }
+
+    // 是否关注了：某”粉丝“是否关注了”某博主“，即粉丝的关注人列表中，是否有这个博主(关注人)
+    public function isFollowing($user_id)
+    {
+        return $this->followings->contains($user_id);
     }
 }

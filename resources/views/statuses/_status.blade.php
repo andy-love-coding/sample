@@ -9,8 +9,8 @@
     {{ $status->created_at->diffForHumans() }}
   </span>
   <span class="content">{{ $status->content }}</span>
-  <!-- can 对 StatusPolicy 中的授权方法 auth_destroy 进行判断：只有自己能删除自己的微博，有权限，才显示删除按钮 -->
-  @can('auth_destroy', $status)
+  <!-- can 对 StatusPolicy 中的授权方法 is_destroy 进行判断：只有自己能删除自己的微博，有权限，才显示删除按钮 -->
+  @can('is_destroy', $status)
     <form action="{{ route('statuses.destroy', $status->id) }}" method="POST">
       {{ csrf_field() }}
       {{ method_field('DELETE') }}

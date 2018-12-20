@@ -16,7 +16,7 @@ class UsersController extends Controller
     ]);
 
     $this->middleware('guest', [  // guest 只允许未登录用户访问的动作
-        'only' => ['create']      // 这1个方法，只允许未登录用户访问，其余方法都行要登录访问（即：注册页面只允许未登录访问）
+        'only' => ['create']      // 仅仅这个方法需要经过 guest 过滤，即只允许未登录访问
     ]);
   }
 
@@ -135,4 +135,19 @@ class UsersController extends Controller
     session()->flash('success', '恭喜你，激活成功！');
     return redirect()->route('users.show', [$user]);
   }
+
+  // 获取 某粉丝 的 博主(关注人)列表
+  public function followings(User $user) {
+    $users = $user->followings()->paginate(30);
+    $title = '关注的人';
+    return view('users.show_follow', compact('users','title'));
+  }
+
+  // 获取 某博主 的 粉丝列表
+  public function followers(User $user) {
+    $users = $user->followers()->paginate(30);
+    $title = '粉丝';
+    return view('users.show_follow', compact('users','title'));
+  }
+
 }

@@ -8,9 +8,18 @@
         <section class="user_info">
           @include('shared._user_info', ['user' => $user])
         </section>
+        <section class="stats">
+          <!-- include('shared._stats', ['user' => $user]) -->
+          <!-- include 不包含数组变量 $user 也行，是因为子模板可以用父模板的 $user -->
+          @include('shared._stats')
+        </section>
       </div>
     </div>
     <div class="col-md-12">
+      @if (Auth::check())
+        @include('users._follow_form')
+      @endif
+
       @if (count($statuses) > 0)
         <ol class="statuses">
           @foreach ($statuses as $status)

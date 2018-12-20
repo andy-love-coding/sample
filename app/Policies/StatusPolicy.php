@@ -11,7 +11,7 @@ class StatusPolicy
     use HandlesAuthorization;
 
     // 只能删除自己发的微博，要求：当前用户id（$user->id） 等于 微博用户的id（$status->user_id）
-    public function auth_destroy(User $user, Status $status)
+    public function is_destroy(User $user, Status $status)
     {
         return $user->id === $status->user_id;
     }
