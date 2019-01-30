@@ -32,7 +32,7 @@ class StatusesController extends Controller
   // 删除微博：这里我们使用的是『隐性路由模型绑定』功能，Laravel 会自动查找并注入对应 ID 的实例对象 $status
   public function destroy(Status $status)
     {
-        $this->authorize('auth_destroy', $status); // 授权删除微博：只有直接才能删除自己的微博
+        $this->authorize('destroy', $status); // 授权删除微博：只有直接才能删除自己的微博
         $status->delete();
         session()->flash('success', '微博已被成功删除！');
         return redirect()->back();

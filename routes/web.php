@@ -33,7 +33,7 @@ Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm
 // 执行密码更新操作
 Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.update');
 
-// 只生成 post:stroe 和 delete:destroy 2个路由
+// 只生成 post:store 和 delete:destroy 2个路由
 Route::resource('statuses', 'StatusesController', ['only' => ['store', 'destroy']]);
 
 Route::get('/users/{user}/followings', 'UsersController@followings')->name('users.followings');// 博主(关注人)列表
